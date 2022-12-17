@@ -1,0 +1,185 @@
+openapi: 3.0.0
+info:
+  title: Chaopraya Rainfalls API
+  description: This API provides historical rainfall data over upper Chaopraya river
+    basin between 1987 and 2022.  Raw data provided by Thai Meteorological Department
+    (TMD).
+  version: 1.0.0
+servers:
+- url: /rain-api/v1
+paths:
+  /basins:
+    get:
+      summary: Returns a list of basins.
+      operationId: controller_get_basins
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BasinShort'
+                x-content-type: application/json
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+  /basins/{basinId}:
+    get:
+      summary: Returns complete details of the specified basin
+      operationId: controller_get_basin_details
+      parameters:
+      - name: basinId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasinFull'
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+  /basins/{basinId}/stations:
+    get:
+      summary: Returns a list of stations located within the specified basin.
+      operationId: controller_get_stations
+      parameters:
+      - name: basinId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StationShort'
+                x-content-type: application/json
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+  /basins/{basinId}/annualRainfalls/{year}:
+    get:
+      summary: Returns a total rainfalls on the speficied basin during the specified
+        year.
+      operationId: controller_get_annual_rainfall
+      parameters:
+      - name: basinId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      - name: year
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnnualRainFalls'
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+  /stations/{stationId}:
+    get:
+      summary: Returns complete details of the specified station
+      operationId: controller_get_station_details
+      parameters:
+      - name: stationId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StationFull'
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+components:
+  schemas:
+    BasinShort:
+      type: object
+      properties:
+        basinId:
+          type: integer
+        name:
+          type: string
+      example:
+        name: name
+        basinId: 0
+    BasinFull:
+      type: object
+      properties:
+        basinId:
+          type: integer
+        name:
+          type: string
+        area:
+          type: number
+          description: Total basin area in sq.km
+      example:
+        area: 6.02745618307040320615897144307382404804229736328125
+        name: name
+        basinId: 0
+    StationShort:
+      type: object
+      properties:
+        stationId:
+          type: integer
+        name:
+          type: string
+      example:
+        name: name
+        stationId: 0
+    StationFull:
+      type: object
+      properties:
+        stationId:
+          type: integer
+        basinId:
+          type: integer
+        name:
+          type: string
+        lat:
+          type: number
+        lon:
+          type: number
+      example:
+        name: name
+        basinId: 6
+        lon: 5.962133916683182377482808078639209270477294921875
+        lat: 1.46581298050294517310021547018550336360931396484375
+        stationId: 0
+    AnnualRainFalls:
+      type: object
+      properties:
+        basinId:
+          type: integer
+        year:
+          type: integer
+        rainfall:
+          type: number
+      example:
+        rainfall: 1.46581298050294517310021547018550336360931396484375
+        year: 6
+        basinId: 0
+

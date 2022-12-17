@@ -1,0 +1,2 @@
+-r stub/requirements.txt
+PyMySQL

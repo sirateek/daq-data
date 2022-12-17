@@ -1,0 +1,74 @@
+openapi: 3.0.0
+info:
+  title: University's enrollment data
+  description: This api provide the university's enrollment data.
+  version: 2.0.0
+servers:
+  - url: http://127.0.0.1:8080/enroll-api/v3
+paths:
+  /student/{studentId}/semester/{semester}/courses:
+    parameters:
+      - name: studentId
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: semester
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      summary: Returns the number of courses the student enrolled on in the semester.
+      operationId: controller.get_enroll_courses_in_semester_for_student
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseNumEnrolledCourse"
+
+  /student/{studentId}/semester/{semester}/courseslist:
+    parameters:
+      - name: studentId
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: semester
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      summary: Returns a list of courses the student enrolled on in the semester.
+      operationId: controller.get_enroll_course_with_grade_in_semester_for_student
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EnrolledCourse"
+
+components:
+  schemas:
+    ResponseNumEnrolledCourse:
+      type: object
+      properties:
+        numberOfEnrolledCourse:
+          type: integer
+        semester:
+          type: integer
+    EnrolledCourse:
+      type: object
+      properties:
+        courseId:
+          type: integer
+        name:
+          type: string
+        grade:
+          type: string
